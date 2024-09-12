@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { UserComponent } from './components/user/user.component';
+import { ProductComponent } from './components/product/product.component';
 
 @Component({
-  selector: 'app-root',
+  selector: 'root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, UserComponent, ProductComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'ejemplo1';
+  title:string = 'mamahuevo';
+  author:string = 'Kelvin Bermeo'
 }
