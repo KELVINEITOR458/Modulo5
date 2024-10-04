@@ -1,0 +1,13 @@
+<table class="table table-striped">
+    <thead>
+        <th>ID</th>
+        <th>IDENTIFICACION</th>
+        <th>NOMBRES Y APELLIDOS</th>
+    </thead>
+    <tbody>
+        @for (item of course.students; track $index) {
+          <tr students-row [item]="item"></tr>
+        }
+
+    </tbody>
+</table>
