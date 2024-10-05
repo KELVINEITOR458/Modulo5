@@ -1,0 +1,93 @@
+Comandos de docker para ser usados en el examen xdxdxdxd
+
+PARA DESPLEGAR LA BASE DE DATOS: POSTGRES
+1._ docker search postgres
+2.- docker pull postgres:13
+3._ verificar la imagen descargada: docker images
+4._ Crear un contenedor: docker run --name nombredeejemplo -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=nombrebasedatos -p 5432:5432 -d postgres:13 -d
+5._ Docker logs iddelcontenedor
+
+PARA DESPLEGAR LA BASE DE DATOS PT2: PGADMIN
+1._ buscar la imagen en docker hub: docker search dpage/pgadmin4
+2._ Descargar una imagen desde docker hub: docker pull dpage/pgadmin4
+3._ Listar todas las imágenes locales: docker images
+4._ Crear un contenedor: docker run --name mipgadmin -e PGADMIN_DEFAULT_EMAIL=admin@gmail.com(pon el correo que quieras) -e PGADMIN_DEFAULT_PASSWORD=admin -p 8082:80 -d dpage/pgadmin4
+
+UNA VEZ HECHO TODO ESTO: 
+En docker desktop dar click en 8082 del container.
+Colocar las credenciales creadas al crear user y admin en pg admin y postgres
+Una vez intentamos crear la database para poder rellenar el host name debemos ir al cmd de nuevo y: 
+1._hacer un : docker inspect (copiar el id del contenedor de postgres)
+de ahí toca copiar el IP Adress
+
+
+CAPITULO 2: 
+PARA CREAR MI PRIMERA IMAGEN DE DOCKER:
+crear una carpeta y dentro de esa carpeta un archivo llamado Dockerfile (sin extensiones)
+después abirlo con block de notas y colocar lo siguiente:
+	FROM ubuntu:latest
+	LABEL maintainer="kelvinbermeo8@gmail.com"
+	RUN apt-get update
+	RUN apt-get -y upgrade
+	RUN apt-get install -y curl
+	RUN apt-get install -y iputils-ping
+	RUN apt-get install -y telnet
+	CMD ["tail", "-f", "/dev/null"]
+después en el cmd hacer:
+1._ dir para ver que el dockerfile stese en la carpeta
+2._ crear la imagen: docker build -t mi-primera-imagen:latest .
+3._ para revisar el numero de capas que tiene la imagen: docker inspect (nombre de la imagen)
+
+
+PARA SUBIR LA IMAGEN A DOCKERHUB:
+1._docker images (verificar si está la imagen)
+2._ iniciar sesión en docker hub desde cmd: docker login
+3._etiquetar nuestra imagen: docker tag (nombre de la imagen) nombredeusuario/nombredelaimagen:version
+4._verificar: docker images
+5._hacer push para subir: docker push nombredeusuario/nombredelaimagen:version
+
+
+CAPITULO 3:
+LEVANTAR UN CONTENEDOR DE FORMA INTERACTIVA
+1._Abrir 3 powershelf (no es extrictamente necesario: shift+alt+menos
+2._docker images
+3._ver los contenedores ejecutándose: docker ps
+4._levantar el contenedor de forma interactiva: docker run -it --name (nombre del contenedor que le quieras poner) (elegir la imagen que va a ser levantada mas la versión) /bin/bash
+
+(códigos de Linux:
+	uname
+	hostname
+	ping google.com
+	curl http://google.com
+	telnet (ip que devolvió el pin) 80
+Dato importante (se pueden crear muchos contenedores a partir de 1 sola imagen solamente toca cambiar el nombre del contenedor)
+
+LEVANTAR UN CONTENEDOR EN SEGUNDO PLANO
+1._docker run -d --name (nombre del contenedor) nombredeusuario/nombredelaimagen:version
+
+
+CORRER CONTENEDORES SIN DESCARGAR:
+1._ buscar la imagen: docker search ubutntu
+2._ correr la imagen: docker run -it ubuntu:latest /bin/bash
+
+
+PROBAR CONEXION ENTRE CONTENEDORES:
+1._ Crear varias instancias del contenedor
+2._ para poder hacer ping de un contenedor a otro toda hacer un docker inspect (id del contenedor al que deseas conectar) y copiar el ip adress
+3._ hacer ping desde un contenedor con otro
+
+
+DOCKERIZAR UN PROYECTO DE ANGULAR
+1._ Probar si esque vale el ejercicio
+2._ En la carpeta que esta el proyecto añadir el dockerfile con:
+	FROM node:18-alpine
+	WORKDIR /app
+	COPY package*.json ./
+	RUN npm install
+	COPY . .
+	EXPOSE 4200
+	CMD ["npm", "start", "--", "--host", "0.0.0.0"]
+3._ construir la imagen: docker build -t nombredelaimagen:version .
+4._ ejecutar contenedor: docker run -d --name nombredelcontenedor -p (puerto del angular):(puerto del angular) nombredelaimagen:verion
+5._opcional: ingresar al terminal desde docker dectoop y: listar archivos: ls -lt
+ y con esto ya puedes subir la aplicación al docker hub
